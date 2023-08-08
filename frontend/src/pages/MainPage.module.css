@@ -1,0 +1,16 @@
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  height: 100vh;
+}
+
+.sideBar {
+  flex: 1 0;
+  background-color: grey;
+  border-right: 1px solid black;
+}
+
+.map {
+  flex: 4 0;
+  background-color: skyblue;
+}
