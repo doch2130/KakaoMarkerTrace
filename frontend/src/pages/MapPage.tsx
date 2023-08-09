@@ -1,5 +1,6 @@
 import React from 'react';
 import MapView from '../components/map/MapView';
+import MapTest1 from '../components/map/MapTest1';
 
 export default function MapPage() {
   const mapData = {
@@ -11,7 +12,8 @@ export default function MapPage() {
   
   return (
     <div>
-      <MapView height='100vh' mapData={mapData} />
+      {/* <MapView height='100vh' mapData={mapData} /> */}
+      <MapTest1 height='100vh' mapData={mapData} />
     </div>
   )
 }

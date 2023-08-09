@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const { naver } = window;
 
@@ -16,9 +16,13 @@ interface latlngInterface {
 
 export default function MapView(props:naverMapInterface) {
   // const { setValueHandler } = props;
+  // const markerList = [];
+  // const infoWindowList = [];
+  const [markerList, setMarkerList] = useState([]);
+  const [infoWindowList, setInfoWindowList] = useState([]);
   const mapElement = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useEffect(():void => {
     if (!mapElement.current || !naver) return;
 
     // 지도에 표시할 위치의 위도와 경도 좌표를 파라미터로 넣어줍니다.
@@ -32,7 +36,7 @@ export default function MapView(props:naverMapInterface) {
       zoomControlOptions: {
         style: naver.maps.ZoomControlStyle.SMALL,
         position: naver.maps.Position.TOP_RIGHT
-    }
+      }
     };
 
     const map = new naver.maps.Map(mapElement.current, mapOptions);
@@ -50,6 +54,13 @@ export default function MapView(props:naverMapInterface) {
     }
     const infoWindow = new naver.maps.InfoWindow(InfoWindowOptions);
 
+    const polyline = new naver.maps.Polyline({
+      map: map,
+      path: [],
+      strokeColor: '#5347AA',
+      strokeWeight: 2
+  });
+
     // const initData = {
     //   x: 126.9640440,
     //   y: 37.5533104,
@@ -62,9 +73,30 @@ export default function MapView(props:naverMapInterface) {
     
     naver.maps.Event.addListener(map, 'click', function(e) {
       infoWindow.close();
-      marker.setPosition(e.coord);
+      // marker.setPosition(e.coord);
       searchCoordinateToAddress(e.coord);
+
+      const path = polyline.getPath();
+      path.push(e.coord);
+
+      // markerList.push(marker);
+      // const temp = marker.setPosition(e.coord)];
+      const temp = e.coord;
+      setMarkerList(temp);
+      // setMarkerList([markerList, ...marker.setPosition(e.coord)]);
+    //   new naver.maps.Marker({
+    //     map: map,
+    //     position: e.coord,
+    //     title: 'A'
+    // });
     });
+
+    const showMarkerHandler = () => {
+      console.log('show');
+      markerList?.map((el:any) => marker.setPosition(el));
+    }
+
+    showMarkerHandler();
 
     naver.maps.Event.addListener(marker, 'click', function() {
       if (infoWindow.getMap()) {
