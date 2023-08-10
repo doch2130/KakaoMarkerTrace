@@ -1,0 +1,25 @@
+.wrap {
+  background: #FFFFFF;
+  width: 90%;
+  max-width: 400px;
+  min-width: 300px;
+  border: 1px solid black;
+  border-radius: 4px;
+  box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
+  margin: 1rem auto;
+  min-height: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  margin: auto 5px;
+}
+
+.contentLeft, .contentRight {
+  flex: 1 0;
+}

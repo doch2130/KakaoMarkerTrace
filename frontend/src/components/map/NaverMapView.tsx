@@ -1,21 +1,15 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef, useState } from 'react'
+import { MapType } from '../../recoil/naverMap';
 
 const { naver } = window;
 
 interface naverMapInterface {
   height: string;
-  mapData: latlngInterface;
+  mapData: MapType;
+  searchAddressResult: any;
 }
 
-interface latlngInterface {
-  x: number;
-  y: number;
-  _lat: number;
-  _lng: number;
-}
-
-const mapDataInit:latlngInterface = {
+const mapDataInit:MapType = {
   x: 0,
   y: 0,
   _lat: 0,
@@ -23,11 +17,11 @@ const mapDataInit:latlngInterface = {
 }
 
 export default function NaverMapView(props:naverMapInterface) {
-  const [markerList, setMarkerList] = useState<latlngInterface[]>([mapDataInit]);
+  const [markerList, setMarkerList] = useState<MapType[]>([mapDataInit]);
 
   const [infoWindowList, setInfoWindowList] = useState<naver.maps.InfoWindow[]>([]);
 
-  const [polyLineList, setPolyLineList] = useState<latlngInterface[]>([mapDataInit]);
+  const [polyLineList, setPolyLineList] = useState<MapType[]>([mapDataInit]);
 
   const mapElement = useRef<HTMLDivElement>(null);
 
@@ -51,19 +45,24 @@ export default function NaverMapView(props:naverMapInterface) {
     // 지도 출력
     const map = new naver.maps.Map(mapElement.current, mapOptions);
 
+    const { searchAddressResult } = props;
+    if(searchAddressResult) {
+      map.setCenter(searchAddressResult);
+    }
+
     // 지도 줄 설정
     new naver.maps.Polyline({
       map: map,
       path: polyLineList[0].x === 0 ? [] : polyLineList,
-      strokeColor: '#13121a',
-      strokeWeight: 2
+      strokeColor: '#FF0000',
+      strokeWeight: 3
     });
 
     // 마커 클릭 이벤트 발생 함수 등록
     naver.maps.Event.addListener(map, 'click', function(e) {
       // 마커 제한 개수 설정 (최대 5개)
-      if(markerList.length >= 5) {
-        console.log('최대 5개까지 설정할 수 있습니다.');
+      if(markerList.length >= 9) {
+        console.log('최대 9개까지 설정할 수 있습니다.');
         return ;
       }
 
@@ -71,7 +70,7 @@ export default function NaverMapView(props:naverMapInterface) {
       if(polyLineList.length === 1 && polyLineList[0].x === 0) {
         setPolyLineList([e.coord]);
       } else {
-        setPolyLineList((prev:latlngInterface[]) => {
+        setPolyLineList((prev:MapType[]) => {
           return [...prev, e.coord];
         });
       }
@@ -86,7 +85,7 @@ export default function NaverMapView(props:naverMapInterface) {
         return ;
       }
       // 2번째 마커부터는 기존 데이터랑 새로운 데이터 합치기
-      setMarkerList((prev:latlngInterface[]) => {
+      setMarkerList((prev:MapType[]) => {
         return [...prev, e.coord];
       });
     });
@@ -125,6 +124,7 @@ export default function NaverMapView(props:naverMapInterface) {
       }
     }
     
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [markerList, props.mapData.x, props.mapData.y, searchCoordinateToAddress]);
 
 
@@ -221,7 +221,7 @@ export default function NaverMapView(props:naverMapInterface) {
   }
 
   // 위경도 주소 변환 함수
-  function searchCoordinateToAddress(latlng:latlngInterface) {
+  function searchCoordinateToAddress(latlng:MapType) {
     // console.log('latlng ', latlng);
     naver.maps.Service.reverseGeocode({
         coords: latlng,
