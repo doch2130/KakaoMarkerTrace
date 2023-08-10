@@ -2,6 +2,8 @@ import React from 'react'
 
 export default function SideBarPage() {
   return (
-    <div>SideBarPage</div>
+    <div>SideBarPag
+      <img src='./defaultMarker1.png' alt='alt' />
+    </div>
   )
 }

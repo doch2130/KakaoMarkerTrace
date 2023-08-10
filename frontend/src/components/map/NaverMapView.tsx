@@ -54,7 +54,6 @@ export default function NaverMapView(props:naverMapInterface) {
     // 지도 줄 설정
     new naver.maps.Polyline({
       map: map,
-      // path: [],
       path: polyLineList[0].x === 0 ? [] : polyLineList,
       strokeColor: '#13121a',
       strokeWeight: 2
@@ -62,6 +61,12 @@ export default function NaverMapView(props:naverMapInterface) {
 
     // 마커 클릭 이벤트 발생 함수 등록
     naver.maps.Event.addListener(map, 'click', function(e) {
+      // 마커 제한 개수 설정 (최대 5개)
+      if(markerList.length >= 5) {
+        console.log('최대 5개까지 설정할 수 있습니다.');
+        return ;
+      }
+
       // 마커 줄 연결 설정
       if(polyLineList.length === 1 && polyLineList[0].x === 0) {
         setPolyLineList([e.coord]);
@@ -92,7 +97,14 @@ export default function NaverMapView(props:naverMapInterface) {
         // 마커 출력
         const marker = new naver.maps.Marker({
           map: map,
-          position: el
+          position: el,
+          icon: {
+            url: `./markerImage/defaultMarker${index+1}.png`,
+            size: new naver.maps.Size(30, 40),
+            scaledSize: new naver.maps.Size(30, 40),
+            origin: new naver.maps.Point(0, 0),
+            anchor: new naver.maps.Point(15, 38)
+          }
         });
 
         // 마커에 주소 표시 이벤트 설정
