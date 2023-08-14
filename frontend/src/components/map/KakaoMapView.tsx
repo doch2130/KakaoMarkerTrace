@@ -1,14 +1,15 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
+import { Map } from 'react-kakao-maps-sdk';
+import { useRecoilState } from 'recoil';
 import { MapType } from '../../recoil/naverMap';
+import { cateogryState } from '../../recoil/category';
 import { KakaoMapType, KakaoSearchDataType } from '../../recoil/kakaoMap';
-import { Polyline } from 'react-kakao-maps-sdk';
 
 const { kakao } = window;
 
 interface kakaoMapInterface {
   height: string;
   mapData: MapType;
-  // searchAddressResult: any;
   searchAddressResult: KakaoSearchDataType;
   setSearchAddressResult: Function;
 }
@@ -24,6 +25,9 @@ interface handleMapEventType {
 
 export default function KakaoMapView(props:kakaoMapInterface) {
   const { mapData, searchAddressResult, setSearchAddressResult } = props;
+  // recoil 테스트
+  const [kakaoMapList, setKakaoMapList] = useRecoilState<KakaoMapType[][]>(cateogryState);
+  console.log('kakaoMapList ', kakaoMapList);
 
   const mapElement = useRef<HTMLDivElement>(null);
   const [mapView, setMapView] = useState<kakao.maps.Map>();
@@ -164,6 +168,12 @@ export default function KakaoMapView(props:kakaoMapInterface) {
       polyline.setMap(mapView);
     }
   }, [mapView, polyLineList]);
+
+  useEffect(() => {
+    if(markerList[0].La !== 0 && markerList[0].Ma !== 0) {
+      setKakaoMapList([markerList])
+    }
+  }, [markerList, setKakaoMapList]);
 
   return (
     <div ref={mapElement} style={{ minHeight: props.height }} />

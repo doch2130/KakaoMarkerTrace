@@ -2,6 +2,8 @@ import { useRef } from 'react';
 import Box from '../components/ui/Box';
 import style from './SideBarPage.module.css';
 import React from 'react';
+import { useRecoilState } from 'recoil';
+import { cateogryState, categoryType } from '../recoil/category';
 
 interface sideBarPageProps {
   setSearchAddressResult: Function;
@@ -10,6 +12,9 @@ interface sideBarPageProps {
 export default function SideBarPage(props:sideBarPageProps) {
   const { setSearchAddressResult } = props;
   const searchInput = useRef<HTMLInputElement>(null);
+
+  // recoil 테스트
+  const [cateogryList, setCateogryList] = useRecoilState<categoryType[][]>(cateogryState);
 
   const searchAddressHandler = (e:React.KeyboardEvent<HTMLInputElement>) => {
     if(!searchInput.current) {
@@ -49,6 +54,11 @@ export default function SideBarPage(props:sideBarPageProps) {
   }
 
 
+  const test = () => {
+    const updateData:categoryType[] = [];
+    setCateogryList((prevCategoryList) => [...prevCategoryList, updateData])
+  }
+
   return (
     <div>
       <div className={style.header}>
@@ -60,7 +70,14 @@ export default function SideBarPage(props:sideBarPageProps) {
         }}>검색</button>
       </div>
       <div className={style.body}>
-        <Box />
+        <div className={style.add}>
+          <span onClick={test}>카테고리 추가하기</span>
+        </div>
+        {cateogryList?.map((el, index) => {
+          console.log('el ', el);
+          console.log('index ', index);
+          return <Box indexNumber={index} categoryData={el} key={index}/>
+        })}
       </div>
     </div>
   )

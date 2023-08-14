@@ -48,7 +48,7 @@ export default function SideBarPageBackup(props:sideBarPageProps) {
         <button type='button'>검색</button>
       </div>
       <div className={style.body}>
-        <Box />
+        {/* <Box /> */}
       </div>
     </div>
   )

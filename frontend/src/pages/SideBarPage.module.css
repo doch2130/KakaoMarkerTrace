@@ -19,3 +19,14 @@
   font-weight: 700;
   cursor: pointer;
 }
+
+.body .add {
+  text-align: right;
+}
+
+.body .add > span {
+  margin-right: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
