@@ -3,8 +3,16 @@ import MapPage from './MapPage';
 import style from './MainPage.module.css';
 import { useState } from 'react';
 
+interface searchAddressResultType {
+  x: number;
+  y: number;
+}
+
 export default function MainPage() {
-  const [searchAddressResult, setSearchAddressResult] = useState();
+  const [searchAddressResult, setSearchAddressResult] = useState<searchAddressResultType>({
+    x: 0,
+    y: 0
+  });
 
   return (
     <div className={style.wrap}>
@@ -12,7 +20,7 @@ export default function MainPage() {
         <SideBarPage setSearchAddressResult={setSearchAddressResult} />
       </div>
       <div className={style.map}>
-        <MapPage searchAddressResult={searchAddressResult} />
+        <MapPage searchAddressResult={searchAddressResult} setSearchAddressResult={setSearchAddressResult} />
       </div>
     </div>
   )

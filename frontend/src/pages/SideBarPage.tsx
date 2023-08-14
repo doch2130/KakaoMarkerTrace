@@ -7,6 +7,7 @@ interface sideBarPageProps {
 }
 
 export default function SideBarPage(props:sideBarPageProps) {
+  const { setSearchAddressResult } = props;
   const searchInput = useRef<HTMLInputElement>(null);
   
   const searchAddressHandler = (e:React.KeyboardEvent<HTMLInputElement>) => {
@@ -36,7 +37,7 @@ export default function SideBarPage(props:sideBarPageProps) {
         const item = response.v2.addresses[0];
         const point = new naver.maps.Point(Number(item.x), Number(item.y));
 
-        props.setSearchAddressResult(point);
+        setSearchAddressResult(point);
     });
   }
   
