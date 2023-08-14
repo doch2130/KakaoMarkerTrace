@@ -1,12 +1,10 @@
 import { MapType } from '../recoil/naverMap';
-// import NaverMapViewBackup from '../components/map/NaverMapViewBackup';
-import NaverMapView from '../components/map/NaverMapView';
+// import NaverMapView from '../components/map/NaverMapView';
+import KakaoMapView from '../components/map/KakaoMapView';
+import { KakaoSearchDataType } from '../recoil/kakaoMap';
 
 interface mapPageProps {
-  searchAddressResult: {
-    x: number;
-    y: number;
-  };
+  searchAddressResult: KakaoSearchDataType;
   setSearchAddressResult: Function;
 }
 
@@ -26,8 +24,8 @@ export default function MapPage(props:mapPageProps) {
   
   return (
     <div>
-      {/* <NaverMapView height='100vh' mapData={mapData} searchAddressResult={searchAddressResult} /> */}
-      <NaverMapView height='100vh' mapData={mapData}
+      {/* <NaverMapView height='100vh' mapData={mapData} searchAddressResult={searchAddressResult} setSearchAddressResult={setSearchAddressResult} /> */}
+      <KakaoMapView height='100vh' mapData={mapData}
       searchAddressResult={searchAddressResult} setSearchAddressResult={setSearchAddressResult} />
     </div>
   )

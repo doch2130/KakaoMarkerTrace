@@ -6,6 +6,13 @@ import { RecoilRoot } from 'recoil';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
+
 root.render(
   <RecoilRoot>
     <App />

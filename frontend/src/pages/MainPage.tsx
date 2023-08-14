@@ -2,16 +2,13 @@ import SideBarPage from './SideBarPage';
 import MapPage from './MapPage';
 import style from './MainPage.module.css';
 import { useState } from 'react';
+import { KakaoSearchDataType } from '../recoil/kakaoMap';
 
-interface searchAddressResultType {
-  x: number;
-  y: number;
-}
 
 export default function MainPage() {
-  const [searchAddressResult, setSearchAddressResult] = useState<searchAddressResultType>({
-    x: 0,
-    y: 0
+  const [searchAddressResult, setSearchAddressResult] = useState<KakaoSearchDataType>({
+    La: 0,
+    Ma: 0,
   });
 
   return (

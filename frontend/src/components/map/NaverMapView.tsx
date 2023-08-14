@@ -25,6 +25,7 @@ interface handleMapEventType {
 
 export default function NaverMapView(props:naverMapInterface) {
   const { mapData, searchAddressResult, setSearchAddressResult } = props;
+  
   const mapElement = useRef<HTMLDivElement>(null);
   const [mapView, setMapView] = useState<naver.maps.Map>();
   
