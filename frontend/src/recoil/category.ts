@@ -1,27 +1,32 @@
 import { atom } from 'recoil';
 
-export interface categoryType {
+export interface categoryDataType {
   La: number;
   Ma: number;
 }
 
-export const cateogryState = atom<categoryType[][]>({
-  key: 'category',
-  default: [[]]
-});
-
-
-
-// 이게 맞나....
-interface test {
-  key: categoryType[]
+export interface categoryType {
+  key: categoryDataType[]
 }
 
-export const cateogryState2 = atom<test[]>({
-  key: 'category2',
+export const cateogryState = atom<categoryType[]>({
+  key: 'category',
   default: [
     {
-      key: []
+      key: [
+        {La:0, Ma:0},
+      ]
     }
   ]
+});
+
+export interface menuIndexNumberType {
+  index: number;
+}
+
+export const menuIndexState = atom<menuIndexNumberType>({
+  key: 'menuIndexNumber',
+  default: {
+    index: 0
+  }
 });

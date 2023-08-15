@@ -11,6 +11,11 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  cursor: pointer;
+}
+
+.active {
+  border: 2px solid rgb(67, 67, 250);
 }
 
 .content {

@@ -7,14 +7,14 @@ import { cateogryState, categoryType } from '../recoil/category';
 
 interface sideBarPageProps {
   setSearchAddressResult: Function;
+  sideIndexNumber?: number;
+  setSideIndexNumber?: Function;
 }
 
 export default function SideBarPage(props:sideBarPageProps) {
-  const { setSearchAddressResult } = props;
+  const { setSearchAddressResult, sideIndexNumber, setSideIndexNumber } = props;
   const searchInput = useRef<HTMLInputElement>(null);
-
-  // recoil 테스트
-  const [cateogryList, setCateogryList] = useRecoilState<categoryType[][]>(cateogryState);
+  const [cateogryList, setCateogryList] = useRecoilState<categoryType[]>(cateogryState);
 
   const searchAddressHandler = (e:React.KeyboardEvent<HTMLInputElement>) => {
     if(!searchInput.current) {
@@ -22,13 +22,19 @@ export default function SideBarPage(props:sideBarPageProps) {
     }
 
     if(e.key === 'Enter') {
-      locationSearchFunction(searchInput.current.value);
+      locationSearchFunction();
     }
     return ;
   };
 
   
-  function locationSearchFunction(address:string) {
+  function locationSearchFunction() {
+    if(!searchInput.current) {
+      return ;
+    }
+
+    const address = searchInput.current.value;
+
     if(address === null || address === undefined || address.trim() === '') {
       alert('주소나 지역을 입력해주세요');
       return ;
@@ -53,30 +59,26 @@ export default function SideBarPage(props:sideBarPageProps) {
     });
   }
 
-
-  const test = () => {
-    const updateData:categoryType[] = [];
-    setCateogryList((prevCategoryList) => [...prevCategoryList, updateData])
+  const addCategoryHandler = () => {
+    setCateogryList((prevCategoryList2:categoryType[]) => {
+      const updateData:categoryType = { key: [{La:0, Ma:0}] }
+      return [...prevCategoryList2, updateData]
+    })
   }
 
   return (
     <div>
       <div className={style.header}>
         <input ref={searchInput} type='text' placeholder='지역 검색' onKeyDown={searchAddressHandler} />
-        <button type='button' onClick={() => {
-          if(searchInput.current) {
-            locationSearchFunction(searchInput.current.value)
-          }
-        }}>검색</button>
+        <button type='button' onClick={locationSearchFunction}>검색</button>
       </div>
       <div className={style.body}>
         <div className={style.add}>
-          <span onClick={test}>카테고리 추가하기</span>
+          <span onClick={addCategoryHandler}>카테고리 추가하기</span>
         </div>
         {cateogryList?.map((el, index) => {
-          console.log('el ', el);
-          console.log('index ', index);
-          return <Box indexNumber={index} categoryData={el} key={index}/>
+          return <Box key={index} indexNumber={index} categoryData={el.key}
+          sideIndexNumber={sideIndexNumber} setSideIndexNumber={setSideIndexNumber}/>
         })}
       </div>
     </div>
