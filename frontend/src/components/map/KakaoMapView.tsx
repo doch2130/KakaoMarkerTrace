@@ -189,56 +189,32 @@ export default function KakaoMapView(props:kakaoMapInterface) {
   useEffect(() => {
     if (mapView !== undefined) {
       // 기존 마커들 삭제
-      // polylines.forEach(polyline => {
-      //   polyline.setMap(null);
-      // });
-      
-
+      polylines.forEach(polyline => {
+        polyline.setMap(null);
+      });
       const newPolylines: kakao.maps.Polyline[] = [];
-
       // 마커 출력
       if (category[menuIndex.index].key.length >= 1
         && category[menuIndex.index].key[0].La !== 0 && category[menuIndex.index].key[0].Ma) {
 
           const polyline = new kakao.maps.Polyline({
-            // path: category[menuIndex.index].key, // 선을 구성하는 좌표배열 입니다
-            path: polylines, // 선을 구성하는 좌표배열 입니다
+            path: category[menuIndex.index].key, // 선을 구성하는 좌표배열 입니다
+            // path: polylines, // 선을 구성하는 좌표배열 입니다
             strokeWeight: 5, // 선의 두께 입니다
             strokeColor: '#FF0000', // 선의 색깔입니다
             strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
             strokeStyle: 'solid' // 선의 스타일입니다
           });
-          polyline.setMap(null);
+
           polyline.setMap(mapView);
-          
-
-        // category[menuIndex.index].key.forEach((el, index) => {
-        //   console.log('el ', el);
-
-        //   const polyline = new kakao.maps.Polyline({
-        //     path: [el.Ma, el.La], // 선을 구성하는 좌표배열 입니다
-        //     // path: [33.450701, 126.570667], // 선을 구성하는 좌표배열 입니다
-        //     strokeWeight: 5, // 선의 두께 입니다
-        //     strokeColor: '#FF0000', // 선의 색깔입니다
-        //     strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-        //     strokeStyle: 'solid' // 선의 스타일입니다
-        //   });
-
-        //   newPolylines.push(polyline);
-        //   // polyline.setMap(mapView);
-        // });
+          newPolylines.push(polyline);
       }
       
       // 새로운 마커들을 상태 업데이트로 설정
       setPolylines(newPolylines);
-      console.log('newPolylines ', newPolylines);
-
-      // 새로운 마커들을 지도에 추가
-      // newPolylines.forEach(polyline => {
-      //   polyline.setMap(mapView);
-      // })
+      // console.log('newPolylines ', newPolylines);
     }
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, mapView, menuIndex.index]);
 
   return (
