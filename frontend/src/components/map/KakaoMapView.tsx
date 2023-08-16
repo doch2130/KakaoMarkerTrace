@@ -3,7 +3,7 @@ import { Map } from 'react-kakao-maps-sdk';
 import { useRecoilState } from 'recoil';
 import { MapType } from '../../recoil/naverMap';
 import { cateogryState, categoryType, menuIndexState, menuIndexNumberType, categoryDataType } from '../../recoil/category';
-import { KakaoMapType, KakaoSearchDataType } from '../../recoil/kakaoMap';
+// import { KakaoMapType, KakaoSearchDataType } from '../../recoil/kakaoMap';
 
 const { kakao } = window;
 
@@ -78,20 +78,26 @@ export default function KakaoMapView(props:kakaoMapInterface) {
   // 마커 추가 함수 (분리)
   const addMarker = useCallback((coord: categoryDataType, menuIndex: number) => {
     setCategory((prevCategory) => {
-      // console.log('prevCategory[menuIndex.state].key ', prevCategory[menuIndex].key);
+      // console.log('prevCategory[menuIndex.state].latlngArr ', prevCategory[menuIndex].latlngArr);
       const updatedCategory = prevCategory.map((categoryItem, index) => {
         // console.log('categoryItem ', categoryItem);
         if (index === menuIndex) {
-          if(prevCategory[index].key.length >= 9) {
+          if(prevCategory[index].latlngArr.length >= 9) {
             alert('최대 9개까지 설정할 수 있습니다.');
             return categoryItem;
-          } else if(prevCategory[index].key.length === 1 && prevCategory[index].key[0].La === 0 && prevCategory[index].key[0].Ma === 0) {
-            return { key: [coord] };
+          } else if(prevCategory[index].latlngArr.length === 1 && prevCategory[index].latlngArr[0].La === 0 && prevCategory[index].latlngArr[0].Ma === 0) {
+            return { 
+              name: prevCategory[index].name,
+              latlngArr: [coord]
+            };
           } else {
             // console.log('coord ', coord);
-            const updateMapData = [...prevCategory[index].key, coord];
+            const updateMapData = [...prevCategory[index].latlngArr, coord];
             // console.log('updateMapData ', updateMapData);
-            return { key: updateMapData };
+            return { 
+              name: prevCategory[index].name,
+              latlngArr: updateMapData
+            };
           }
         }
         return categoryItem;
@@ -102,20 +108,6 @@ export default function KakaoMapView(props:kakaoMapInterface) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
-  // // 마커 줄 연결 함수 (분리)
-  // const addPolyLine = useCallback((coord: categoryDataType, menuIndex: number) => {
-  //   setPolyLineList((prevPolyLineList) => {
-  //     if (prevPolyLineList.length >= 9) {
-  //       // console.log('라인 최대 9개까지 설정할 수 있습니다.');
-  //       return [...prevPolyLineList];
-  //     } else if(prevPolyLineList.length === 1 && prevPolyLineList[0].La === 0 && prevPolyLineList[0].Ma === 0) {
-  //       return [coord];
-  //     } else {
-  //       return [...prevPolyLineList, coord];
-  //     }
-  //   });
-  // }, []);
-
   // 카카오 지도 마커 추가 함수 클릭 이벤트 등록 (분리)
   const handleMapClick = useCallback((e: handleMapEventType) => {
     // console.log('click');
@@ -151,9 +143,9 @@ export default function KakaoMapView(props:kakaoMapInterface) {
       const newMarkers: kakao.maps.Marker[] = [];
 
       // 마커 출력
-      if (category[menuIndex.index].key.length >= 1
-        && category[menuIndex.index].key[0].La !== 0 && category[menuIndex.index].key[0].Ma) {
-        category[menuIndex.index].key.forEach((el, index) => {
+      if (category[menuIndex.index].latlngArr.length >= 1
+        && category[menuIndex.index].latlngArr[0].La !== 0 && category[menuIndex.index].latlngArr[0].Ma) {
+        category[menuIndex.index].latlngArr.forEach((el, index) => {
 
           // 마커 이미지 옵션
           const markerImage = new kakao.maps.MarkerImage(
@@ -184,21 +176,20 @@ export default function KakaoMapView(props:kakaoMapInterface) {
   }, [category, mapView, menuIndex.index]);
 
 
-  // console.log('polyline ', polyline);
-
+  // 라인 추가 및 설정
   useEffect(() => {
     if (mapView !== undefined) {
-      // 기존 마커들 삭제
+      // 기존 라인 삭제
       polylines.forEach(polyline => {
         polyline.setMap(null);
       });
       const newPolylines: kakao.maps.Polyline[] = [];
-      // 마커 출력
-      if (category[menuIndex.index].key.length >= 1
-        && category[menuIndex.index].key[0].La !== 0 && category[menuIndex.index].key[0].Ma) {
+      // 라인 출력
+      if (category[menuIndex.index].latlngArr.length >= 1
+        && category[menuIndex.index].latlngArr[0].La !== 0 && category[menuIndex.index].latlngArr[0].Ma) {
 
           const polyline = new kakao.maps.Polyline({
-            path: category[menuIndex.index].key, // 선을 구성하는 좌표배열 입니다
+            path: category[menuIndex.index].latlngArr, // 선을 구성하는 좌표배열 입니다
             // path: polylines, // 선을 구성하는 좌표배열 입니다
             strokeWeight: 5, // 선의 두께 입니다
             strokeColor: '#FF0000', // 선의 색깔입니다
@@ -208,14 +199,32 @@ export default function KakaoMapView(props:kakaoMapInterface) {
 
           polyline.setMap(mapView);
           newPolylines.push(polyline);
+          console.log('polyline ', polyline.getLength());
+          // console.log('test ', calculateCoordinates(250, 45));
       }
       
-      // 새로운 마커들을 상태 업데이트로 설정
+      // 새로운 라인들을 상태 업데이트로 설정
       setPolylines(newPolylines);
       // console.log('newPolylines ', newPolylines);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, mapView, menuIndex.index]);
+
+  // 도 각도를 라디안 각도로 변환하는 함수
+  function degreesToRadians(degrees:number) {
+    return degrees * (Math.PI / 180);
+  }
+
+  // 거리와 각도로 좌표를 계산하는 함수
+  function calculateCoordinates(distance:number, angleInDegrees:number) {
+    const angleInRadians = degreesToRadians(angleInDegrees);
+    
+    const x = distance * Math.cos(angleInRadians);
+    const y = distance * Math.sin(angleInRadians);
+    
+    return { x, y };
+  }
+
 
   return (
     <div ref={mapElement} style={{ minHeight: props.height }} />

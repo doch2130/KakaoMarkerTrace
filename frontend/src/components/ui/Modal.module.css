@@ -1,0 +1,77 @@
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 2000;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 3000;
+  animation: slide-down 300ms ease-out forwards;
+  border: 1px solid #000000;
+}
+
+@media (min-width: 768px) {
+  .lgModal {
+    width: 50%;
+    min-width: 630px;
+    max-width: 768px;
+  }
+  .mdModal {
+    min-width: 500px;
+    max-width: 630px;
+  }
+  .smModal {
+    max-width: 500px;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -30rem);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.wrapClose {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 40;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+.wrapClose img {
+  width: 20px;
+  height: 20px;
+}
+
+.wrapClose:hover {
+  background-color: #ececec;
+  border-radius: 50%;
+}
+
+@media (max-width: 560px) {
+  .modal {
+    padding: 1rem 0;
+    width: 100%;
+    border-radius: 0;
+  }
+}

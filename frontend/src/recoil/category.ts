@@ -6,14 +6,16 @@ export interface categoryDataType {
 }
 
 export interface categoryType {
-  key: categoryDataType[]
+  name: string;
+  latlngArr: categoryDataType[]
 }
 
 export const cateogryState = atom<categoryType[]>({
   key: 'category',
   default: [
     {
-      key: [
+      name: '새 카테고리1',
+      latlngArr: [
         {La:0, Ma:0},
       ]
     }

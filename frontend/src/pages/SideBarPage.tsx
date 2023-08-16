@@ -60,11 +60,17 @@ export default function SideBarPage(props:sideBarPageProps) {
   }
 
   const addCategoryHandler = () => {
-    setCateogryList((prevCategoryList2:categoryType[]) => {
-      const updateData:categoryType = { key: [{La:0, Ma:0}] }
-      return [...prevCategoryList2, updateData]
+    setCateogryList((prevCategoryList:categoryType[]) => {
+      // console.log('prevCategoryList ', prevCategoryList);
+      const newName = `새 카테고리${prevCategoryList.length + 1}`;
+      const updateData:categoryType = { name: newName, latlngArr: [{La:0, Ma:0}] }
+      return [...prevCategoryList, updateData]
     })
   }
+
+  // reverse는 일단 보류
+  // reverse 사용 시 카테고리 추가할 때 menuIndexNumber + 1 값도 설정해야 함
+  // const reverse = [...cateogryList].reverse();
 
   return (
     <div>
@@ -77,7 +83,8 @@ export default function SideBarPage(props:sideBarPageProps) {
           <span onClick={addCategoryHandler}>카테고리 추가하기</span>
         </div>
         {cateogryList?.map((el, index) => {
-          return <Box key={index} indexNumber={index} categoryData={el.key}
+        // {/* {reverse?.map((el, index) => { */}
+          return <Box key={index} indexNumber={index} categoryKey={el} setCateogryKey={setCateogryList}
           sideIndexNumber={sideIndexNumber} setSideIndexNumber={setSideIndexNumber}/>
         })}
       </div>

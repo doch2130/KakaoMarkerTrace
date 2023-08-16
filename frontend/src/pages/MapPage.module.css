@@ -1,0 +1,25 @@
+.wrap {
+  position: relative;
+}
+
+.topButton {
+  position: absolute;
+  z-index: 10;
+  top: 10px;
+  left: 10px;
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.topButton img {
+  width: 40px;
+  height: 40px;
+}
+
+.topButton:hover {
+  transform: scale(1.1);
+}

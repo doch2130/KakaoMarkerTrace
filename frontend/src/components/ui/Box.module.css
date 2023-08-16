@@ -23,8 +23,46 @@
   flex-wrap: wrap;
   width: 100%;
   margin: auto 5px;
+  justify-content: space-between;
 }
 
-.contentLeft, .contentRight {
-  flex: auto;
+.contentLeft {
+  max-width: 25px;
+}
+
+.contentCenter .contentName {
+  max-width: 200px;
+  text-align: center;
+}
+
+.contentName > div:nth-of-type(1) {
+  display: flex;
+  justify-content: center;
+}
+
+.contentName input {
+  width: 70%;
+  height: 18px;
+}
+
+.contentName button {
+  margin-left: 5px;
+}
+
+.contentRight {
+  max-width: 60px;
+}
+
+.contentRight img {
+  width: 25px;
+  height: 25px;
+}
+
+.contentRight img:nth-of-type(2) {
+  margin-left: 0.5rem;
+}
+
+.contentRight img:hover {
+  background-color: rgb(214, 214, 214);
+  border-radius: 5px;
 }
