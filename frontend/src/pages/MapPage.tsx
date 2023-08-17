@@ -4,15 +4,27 @@ import { KakaoSearchDataType } from '../recoil/kakaoMap';
 import style from './MapPage.module.css';
 import { useModal } from '../hooks/useModal';
 import DistanceModalChild from '../components/DistanceModalChild';
+import { useRef, useState } from 'react';
 
 interface mapPageProps {
   searchAddressResult: KakaoSearchDataType;
   setSearchAddressResult: Function;
 }
 
+interface manualAddMarkerValue {
+  state: Boolean;
+  distance: number;
+  direction: number;
+}
+
 export default function MapPage(props:mapPageProps) {
   const { searchAddressResult, setSearchAddressResult } = props;
   const { openModal, closeModal } = useModal();
+  const [ manualAddMarkerValue, setManualAddMarkerValue] = useState<manualAddMarkerValue>({
+    state: false,
+    distance: 0,
+    direction: 0
+  });
 
   // 임시 Map Data 값
   // 나중에는 getPosition으로 바꾸면 될 듯
@@ -27,7 +39,7 @@ export default function MapPage(props:mapPageProps) {
     openModal({
       size: 'sm',
       backDrop: true,
-      content: <DistanceModalChild closeModalHandler={closeModal} />
+      content: <DistanceModalChild closeModalHandler={closeModal} setManualAddMarkerValue={setManualAddMarkerValue} />
     });
   }
 
@@ -37,7 +49,7 @@ export default function MapPage(props:mapPageProps) {
         <img src='/icon/plus.png' alt='plus' />
       </div>
       <KakaoMapView height='100vh' mapData={mapData}
-      searchAddressResult={searchAddressResult} setSearchAddressResult={setSearchAddressResult} />
+      searchAddressResult={searchAddressResult} setSearchAddressResult={setSearchAddressResult} manualAddMarkerValue={manualAddMarkerValue} setManualAddMarkerValue={setManualAddMarkerValue} />
     </div>
   )
 }

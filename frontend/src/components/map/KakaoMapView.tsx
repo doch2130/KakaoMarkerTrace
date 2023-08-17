@@ -12,6 +12,14 @@ interface kakaoMapInterface {
   mapData: MapType;
   searchAddressResult: categoryDataType;
   setSearchAddressResult: Function;
+  manualAddMarkerValue: manualAddMarkerValue;
+  setManualAddMarkerValue: Function;
+}
+
+interface manualAddMarkerValue {
+  state: Boolean;
+  distance: number;
+  direction: number;
 }
 
 interface handleMapEventType {
@@ -20,7 +28,7 @@ interface handleMapEventType {
 }
 
 export default function KakaoMapView(props:kakaoMapInterface) {
-  const { mapData, searchAddressResult, setSearchAddressResult } = props;
+  const { mapData, searchAddressResult, setSearchAddressResult, manualAddMarkerValue, setManualAddMarkerValue } = props;
 
   const [menuIndex, setMenuIndex] = useRecoilState<menuIndexNumberType>(menuIndexState);
   const [category, setCategory] = useRecoilState<categoryType[]>(cateogryState);
@@ -112,6 +120,7 @@ export default function KakaoMapView(props:kakaoMapInterface) {
   const handleMapClick = useCallback((e: handleMapEventType) => {
     // console.log('click');
     const coord = e.latLng;
+    // console.log('coord ', coord);
     addMarker(coord, menuIndex.index);
     // addPolyLine(coord, menuIndex.index);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -199,10 +208,8 @@ export default function KakaoMapView(props:kakaoMapInterface) {
 
           polyline.setMap(mapView);
           newPolylines.push(polyline);
-          console.log('polyline ', polyline.getLength());
-          // console.log('test ', calculateCoordinates(250, 45));
+          // console.log('polyline ', polyline.getLength());
       }
-      
       // 새로운 라인들을 상태 업데이트로 설정
       setPolylines(newPolylines);
       // console.log('newPolylines ', newPolylines);
@@ -210,21 +217,75 @@ export default function KakaoMapView(props:kakaoMapInterface) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, mapView, menuIndex.index]);
 
-  // 도 각도를 라디안 각도로 변환하는 함수
   function degreesToRadians(degrees:number) {
     return degrees * (Math.PI / 180);
   }
 
-  // 거리와 각도로 좌표를 계산하는 함수
   function calculateCoordinates(distance:number, angleInDegrees:number) {
-    const angleInRadians = degreesToRadians(angleInDegrees);
-    
-    const x = distance * Math.cos(angleInRadians);
-    const y = distance * Math.sin(angleInRadians);
-    
-    return { x, y };
+      const angleInRadians = degreesToRadians(angleInDegrees);
+
+      const x = distance * Math.cos(angleInRadians);
+      const y = distance * Math.sin(angleInRadians);
+
+      // x = lon, y = lat
+      return { x, y };
   }
 
+  function cartesianToGeodetic(x:number, y:number, originLatitude:number, originLongitude:number) {
+      const a = 6378137.0; // GRS80의 장반경 (미터)
+      const f = 1 / 298.257222101; // GRS80의 편평도
+
+      const degToRad = Math.PI / 180.0;
+      const lat1 = originLatitude * degToRad;
+
+      const e2 = 2 * f - f * f;
+      const rho = a * (1 - e2) / Math.pow(1 - e2 * Math.sin(lat1) * Math.sin(lat1), 1.5);
+      const nu = a / Math.sqrt(1 - e2 * Math.sin(lat1) * Math.sin(lat1));
+
+      const xRad = x / (nu * Math.cos(lat1));
+      const yRad = y / (rho * Math.sin(lat1));
+
+      const lat = originLatitude + yRad * (180.0 / Math.PI);
+      const lon = originLongitude + xRad * (180.0 / Math.PI);
+
+      return { latitude: lat, longitude: lon };
+  }
+
+  useEffect(() => {
+    if (manualAddMarkerValue?.distance === undefined && manualAddMarkerValue?.direction === undefined) return ;
+
+    if(manualAddMarkerValue.state === true &&
+      category[menuIndex.index].latlngArr[0].La === 0 && category[menuIndex.index].latlngArr[0].Ma === 0) {
+      alert('지도를 클륵해서 마커를 1개 설정해주세요!');
+      setManualAddMarkerValue({
+        state: false,
+        distance: 0,
+        direction: 0
+      });
+      return ;
+    }
+
+    if(manualAddMarkerValue.state === true && category[menuIndex.index].latlngArr.length >= 1 && category[menuIndex.index].latlngArr[0].La !== 0 && category[menuIndex.index].latlngArr[0].Ma !== 0) {
+      // 거리와 각도를 사용하여 데카르트 좌표 계산
+      const cartesianCoords = calculateCoordinates(manualAddMarkerValue?.distance, manualAddMarkerValue?.direction);
+      const latlngArrLength = category[menuIndex.index].latlngArr.length - 1;
+      // 데카르트 좌표를 위경도 좌표로 변환
+      const result = cartesianToGeodetic(cartesianCoords.x, cartesianCoords.y, category[menuIndex.index].latlngArr[latlngArrLength].La, category[menuIndex.index].latlngArr[latlngArrLength].Ma);
+      // const result = cartesianToGeodetic(cartesianCoords.x, cartesianCoords.y, category[menuIndex.index].latlngArr[latlngArrLength].Ma, category[menuIndex.index].latlngArr[latlngArrLength].La);
+      // console.log("2번째 좌표의 위도:", result.latitude, "경도:", result.longitude);
+
+      setManualAddMarkerValue({
+        state: false,
+        distance: 0,
+        direction: 0
+      });
+      const coord:categoryDataType =  new kakao.maps.LatLng(result.longitude, result.latitude);
+      // console.log('coord2 ', coord);
+      addMarker(coord, menuIndex.index);
+      return ;
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [manualAddMarkerValue]);
 
   return (
     <div ref={mapElement} style={{ minHeight: props.height }} />
