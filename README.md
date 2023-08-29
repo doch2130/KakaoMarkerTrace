@@ -17,8 +17,8 @@
 REACT_APP_KAKAO_MAP=####   
 
 <h3>4. 실행</h3>
-cd frontend   
-npm run start   
+cd frontend     
+npm run start     
 
 <h3>5. 샘플 사진</h3>
 <div>
