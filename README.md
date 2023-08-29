@@ -14,4 +14,13 @@
 
 <h2>3. 셋팅</h2>
 <h3>frontend/.env</h3>
-REACT_APP_KAKAO_MAP=####
+REACT_APP_KAKAO_MAP=####   
+
+<h3>4. 실행</h3>
+cd frontend   
+npm run start   
+
+<h3>5. 샘플 사진</h3>
+<div>
+<img src='./sampleImage.png' style='width: 300px;'>;
+</div>
