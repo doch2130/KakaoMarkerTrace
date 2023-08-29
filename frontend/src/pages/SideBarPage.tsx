@@ -75,7 +75,7 @@ export default function SideBarPage(props:sideBarPageProps) {
   return (
     <div>
       <div className={style.header}>
-        <input ref={searchInput} type='text' placeholder='지역 검색' onKeyDown={searchAddressHandler} />
+        <input ref={searchInput} type='text' placeholder='지역 검색 ex) 서울, 강남, 판교, 부산' onKeyDown={searchAddressHandler} />
         <button type='button' onClick={locationSearchFunction}>검색</button>
       </div>
       <div className={style.body}>

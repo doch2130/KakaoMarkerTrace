@@ -30,6 +30,7 @@ interface handleMapEventType {
 export default function KakaoMapView(props:kakaoMapInterface) {
   const { mapData, searchAddressResult, setSearchAddressResult, manualAddMarkerValue, setManualAddMarkerValue } = props;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [menuIndex, setMenuIndex] = useRecoilState<menuIndexNumberType>(menuIndexState);
   const [category, setCategory] = useRecoilState<categoryType[]>(cateogryState);
 
@@ -151,27 +152,29 @@ export default function KakaoMapView(props:kakaoMapInterface) {
 
       const newMarkers: kakao.maps.Marker[] = [];
 
-      // 마커 출력
-      if (category[menuIndex.index].latlngArr.length >= 1
-        && category[menuIndex.index].latlngArr[0].La !== 0 && category[menuIndex.index].latlngArr[0].Ma) {
-        category[menuIndex.index].latlngArr.forEach((el, index) => {
+      if(category[menuIndex.index] !== undefined) {
+        // 마커 출력
+        if (category[menuIndex.index].latlngArr.length >= 1 && category[menuIndex.index].latlngArr[0].La !== 0 && category[menuIndex.index].latlngArr[0].Ma) {
+          category[menuIndex.index].latlngArr.forEach((el, index) => {
 
-          // 마커 이미지 옵션
-          const markerImage = new kakao.maps.MarkerImage(
-            `./markerImage/defaultMarker${index+1}.png`,
-            new kakao.maps.Size(30, 40),
-            {offset: new kakao.maps.Point(15, 40)}
-          )
+            // 마커 이미지 옵션
+            const markerImage = new kakao.maps.MarkerImage(
+              `./markerImage/defaultMarker${index+1}.png`,
+              new kakao.maps.Size(30, 40),
+              {offset: new kakao.maps.Point(15, 40)}
+            )
 
-          // 마커 출력
-          const marker = new kakao.maps.Marker({
-            // map: mapView,
-            position: el,
-            image: markerImage,
+            // 마커 출력
+            const marker = new kakao.maps.Marker({
+              // map: mapView,
+              position: el,
+              image: markerImage,
+            });
+            newMarkers.push(marker);
           });
-          newMarkers.push(marker);
-        });
+        }
       }
+
       
       // 새로운 마커들을 상태 업데이트로 설정
       setMarkers(newMarkers);
@@ -181,8 +184,9 @@ export default function KakaoMapView(props:kakaoMapInterface) {
         marker.setMap(mapView);
       });
     }
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [category, mapView, menuIndex.index]);
+  }, [category, mapView, menuIndex]);
 
 
   // 라인 추가 및 설정
@@ -193,9 +197,10 @@ export default function KakaoMapView(props:kakaoMapInterface) {
         polyline.setMap(null);
       });
       const newPolylines: kakao.maps.Polyline[] = [];
-      // 라인 출력
-      if (category[menuIndex.index].latlngArr.length >= 1
-        && category[menuIndex.index].latlngArr[0].La !== 0 && category[menuIndex.index].latlngArr[0].Ma) {
+
+      if(category[menuIndex.index] !== undefined) {
+        // 라인 출력
+        if (category[menuIndex.index].latlngArr.length >= 1 && category[menuIndex.index].latlngArr[0].La !== 0 && category[menuIndex.index].latlngArr[0].Ma) {
 
           const polyline = new kakao.maps.Polyline({
             path: category[menuIndex.index].latlngArr, // 선을 구성하는 좌표배열 입니다
@@ -210,6 +215,8 @@ export default function KakaoMapView(props:kakaoMapInterface) {
           newPolylines.push(polyline);
           // console.log('polyline ', polyline.getLength());
       }
+      }
+
       // 새로운 라인들을 상태 업데이트로 설정
       setPolylines(newPolylines);
       // console.log('newPolylines ', newPolylines);

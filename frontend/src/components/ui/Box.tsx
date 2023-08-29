@@ -82,6 +82,13 @@ export default function Box(props:boxProps) {
         }
         return updatedCategory;
       });
+      if(setSideIndexNumber !== undefined) {
+        if(indexNumber > 0) {
+          setSideIndexNumber({ index: indexNumber-1 });
+        } else {
+          setSideIndexNumber({ index: 0 });
+        }
+      }
     }
     return ;
   }
