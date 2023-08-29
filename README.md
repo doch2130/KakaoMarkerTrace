@@ -1,4 +1,4 @@
-# Kakao MAP API
+# KakaoMarkerTrace
 
 <h2>1. 간략 설명</h2>
 카카오 맵 API를 사용하여, 지도에 마커와 줄을 표시할 수 있으며, Recoil 상태 관리를 이용하여 사이드바에 항목 별로 체크할 수 있는 기능을 사용할 수 있게 설정하였습니다.
@@ -9,6 +9,7 @@
 <img src="https://img.shields.io/badge/-React-blue"/>
 <img src="https://img.shields.io/badge/-Recoil-turquoise"/>
 <img src="https://img.shields.io/badge/-TypeScript-blue"/>
+<h4>Kakao MAP API</h4>
 </div>
 
 <h2>3. 셋팅</h2>
