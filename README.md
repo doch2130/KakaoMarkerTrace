@@ -22,5 +22,5 @@ npm run start
 
 <h3>5. 샘플 사진</h3>
 <div>
-<img src='./sampleImage.png' style='width: 300px;'>;
+<img src='./sampleImage.png' style='width: 500px;'>;
 </div>
